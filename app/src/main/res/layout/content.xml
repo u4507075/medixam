@@ -30,19 +30,133 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textColor="#000000"
+                android:textSize="@dimen/titlesize"
+                android:textColor="@color/colorText"
                 android:text="1"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#00000000"
-                android:text="Which of these combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"/>
 
             <WebView
                 android:id="@+id/question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                ></WebView>
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                        <TextView
+                            android:id="@+id/choice1"
+                            android:layout_width="@dimen/choicesize"
+                            android:layout_height="@dimen/choicesize"
+                            android:textSize="@dimen/textsize"
+                            android:textAlignment="center"
+                            android:background="@drawable/round"
+                            android:textColor="@color/colorWhitesmoke"
+                            android:gravity = "top"
+                            android:text="A"/>
+                    <WebView
+                        android:id="@+id/choicecontent1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/choice2"
+                        android:layout_width="@dimen/choicesize"
+                        android:layout_height="@dimen/choicesize"
+                        android:textSize="@dimen/textsize"
+                        android:textAlignment="center"
+                        android:background="@drawable/round"
+                        android:gravity = "center"
+                        android:text="B"/>
+                    <WebView
+                        android:id="@+id/choicecontent2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/choice3"
+                        android:layout_width="@dimen/choicesize"
+                        android:layout_height="@dimen/choicesize"
+                        android:textSize="@dimen/textsize"
+                        android:textAlignment="center"
+                        android:background="@drawable/round"
+                        android:gravity = "center"
+                        android:text="C"/>
+                    <WebView
+                        android:id="@+id/choicecontent3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/choice4"
+                        android:layout_width="@dimen/choicesize"
+                        android:layout_height="@dimen/choicesize"
+                        android:textSize="@dimen/textsize"
+                        android:textAlignment="center"
+                        android:background="@drawable/round"
+                        android:gravity = "center"
+                        android:text="D"/>
+                    <WebView
+                        android:id="@+id/choicecontent4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/choice5"
+                        android:layout_width="@dimen/choicesize"
+                        android:layout_height="@dimen/choicesize"
+                        android:textSize="@dimen/textsize"
+                        android:textAlignment="center"
+                        android:background="@drawable/round"
+                        android:gravity = "center"
+                        android:text="E"/>
+
+                    <WebView
+                        android:id="@+id/choicecontent5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
         <RelativeLayout
@@ -52,6 +166,10 @@
             android:id="@+id/drawlayer">
 
         </RelativeLayout>
+        <com.example.piyapong.drawing.Handdrawingview
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000"/>
 
     </FrameLayout>
 </LinearLayout>

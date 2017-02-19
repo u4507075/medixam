@@ -14,4 +14,24 @@ public class Variable {
     public static final int PEN_BULE = 5;
     public static final int PEN_RED = 6;
     public static int CURRENTTOOL = PEN_RED;
+
+    //html template
+    public static String htmlquestiontemplate =  "<html>" +
+            "<head>" +
+            "<style>" +
+            "body {text-align: justify;font-size:22px;line-height: 150%;}" +
+            "sup   {font-size:10px; vertical-align: super; line-height: 100%}" +
+            "sub   {font-size:10px; vertical-align: sub; line-height: 100%}" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>%s</body></html>";
+    public static String htmlchoicetemplate =  "<html>" +
+            "<head>" +
+            "<style>" +
+            "body {text-align: justify;font-size:18px; padding-top:0px; margin-top:5px;}" +
+            "sup   {font-size:10px; vertical-align: super; line-height: 100%}" +
+            "sub   {font-size:10px; vertical-align: sub; line-height: 100%}" +
+            "</style>\n" +
+            "</head>\n" +
+            "<body>%s</body></html>";
 }

@@ -1,9 +1,11 @@
 package com.example.piyapong.drawing;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 
 import android.support.v4.app.Fragment;
@@ -11,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,12 +48,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    private Pageviewer mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
 /*
@@ -71,8 +76,9 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager = (Pageviewer) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(20);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -173,22 +179,34 @@ public class MainActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
             WebView question = (WebView) rootView.findViewById(R.id.question);
-            String summary = "<html>" +
-                    "<head>" +
-                    "<style>" +
-                    "body {text-align: justify;font-size:22px;line-height: 150%;}" +
-                    "sup   {font-size:10px; vertical-align: super; line-height: 100%}" +
-                    "sub   {font-size:10px; vertical-align: sub; line-height: 100%}" +
-                    "</style>\n" +
-                    "</head>\n" +
-                    "<body>"+ "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
+            //question.getSettings().setBuiltInZoomControls(true);
+
+            String summary = "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
                     +"Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us."
-                    +"</body></html>";
-            question.loadData(summary, "text/html; charset=utf-8", null);
+                    ;
+            String questioncontent = new String(Variable.htmlquestiontemplate);
+            questioncontent = questioncontent.replace("%s",summary);
+            //question.loadData(questioncontent, "text/html; charset=utf-8", null);
+            question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
             question.setBackgroundColor(Color.TRANSPARENT);
+            question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+            String choicecontent = new String(Variable.htmlchoicetemplate);
+            choicecontent = choicecontent.replace("%s",summary);
+            int[] choices = {R.id.choicecontent1,R.id.choicecontent2,R.id.choicecontent3,R.id.choicecontent4,R.id.choicecontent5};
+            for(int i=0;i<choices.length;i++)
+            {
+                WebView choice = (WebView) rootView.findViewById(choices[i]);
+                //choice.loadData(choicecontent, "text/html; charset=utf-8", null);
+                choice.loadDataWithBaseURL(null, choicecontent, "text/html", "utf-8", null);
+                choice.setBackgroundColor(Color.TRANSPARENT);
+                choice.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            }
+
+
             return rootView;
         }
     }
@@ -213,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 3;
+            return 200;
         }
 
         @Override
@@ -250,26 +268,32 @@ public class MainActivity extends AppCompatActivity {
         if(view.getId()==R.id.paint_blue)
         {
             ((ImageButton)findViewById(R.id.paint_blue)).setBackgroundResource(R.drawable.paint_blue_filled);
+            Variable.CURRENTTOOL = Variable.PAINT_BULE;
         }
         else if(view.getId()==R.id.paint_green)
         {
             ((ImageButton)findViewById(R.id.paint_green)).setBackgroundResource(R.drawable.paint_green_filled);
+            Variable.CURRENTTOOL = Variable.PAINT_GREEN;
         }
         else if(view.getId()==R.id.paint_red)
         {
             ((ImageButton)findViewById(R.id.paint_red)).setBackgroundResource(R.drawable.paint_red_filled);
+            Variable.CURRENTTOOL = Variable.PAINT_RED;
         }
         else if(view.getId()==R.id.pen_blue)
         {
             ((ImageButton)findViewById(R.id.pen_blue)).setBackgroundResource(R.drawable.pen_blue_filled);
+            Variable.CURRENTTOOL = Variable.PEN_BULE;
         }
         else if(view.getId()==R.id.pen_green)
         {
             ((ImageButton)findViewById(R.id.pen_green)).setBackgroundResource(R.drawable.pen_green_filled);
+            Variable.CURRENTTOOL = Variable.PEN_GREEN;
         }
         else if(view.getId()==R.id.pen_red)
         {
             ((ImageButton)findViewById(R.id.pen_red)).setBackgroundResource(R.drawable.pen_red_filled);
+            Variable.CURRENTTOOL = Variable.PEN_RED;
         }
     }
 

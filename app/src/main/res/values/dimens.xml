@@ -7,5 +7,8 @@
     <dimen name="appbar_padding_middle">6dp</dimen>
     <dimen name="titlesize">24sp</dimen>
     <dimen name="subtitlesize">20sp</dimen>
+    <dimen name="textsize">20sp</dimen>
     <dimen name="textpadding">20sp</dimen>
+    <dimen name="smallpadding">5sp</dimen>
+    <dimen name="choicesize">30sp</dimen>
 </resources>
