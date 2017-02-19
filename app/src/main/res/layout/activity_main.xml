@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.piyapong.drawing.MainActivity"
+    android:keepScreenOn="true">
+
+    <!--android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/appbar_padding_top">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout-->
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/colorDarkblue"
+                android:padding="@dimen/appbar_padding_top"
+                android:paddingBottom="0dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fundamental Medical Science I 20/01/2560"
+                    android:textColor="@color/colorWhitesmoke"
+                    android:textSize="@dimen/titlesize"
+                    android:layout_alignParentLeft="true"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/titlesize"
+                    android:textColor="@color/colorWhitesmoke"
+                    android:layout_alignParentRight="true"
+                    android:text="01:25:30"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/toolpanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPastelblue"
+                android:paddingLeft="@dimen/appbar_padding_top"
+                android:paddingRight="@dimen/appbar_padding_top"
+                android:paddingTop="@dimen/appbar_padding_middle"
+                android:paddingBottom="@dimen/appbar_padding_middle">
+
+                <ImageButton
+                    android:id="@+id/viewgridexam"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/gridicon"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:onClick="showOverviewexam"/>
+                <TextView
+                    android:id="@+id/studentid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/subtitlesize"
+                    android:layout_toRightOf="@+id/viewgridexam"
+                    android:paddingLeft="@dimen/appbar_padding_top"
+                    android:paddingRight="@dimen/appbar_padding_top"
+                    android:textColor="@color/colorDarkseablue"
+                    android:text="450710026"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/subtitlesize"
+                    android:layout_toRightOf="@+id/studentid"
+                    android:paddingRight="@dimen/appbar_padding_top"
+                    android:textColor="@color/colorDarkseablue"
+                    android:text="ปิยพงษ์ คำริน"/>
+                <ImageButton
+                    android:id="@+id/eraser"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/eraser"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/paint_green"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/paint_green"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/paint_green"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/paint_blue"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/paint_blue"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/paint_blue"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/paint_red"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/paint_red"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/paint_red"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/pen_green"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/pen_green"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/pen_green"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/pen_blue"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/pen_blue"
+                    android:alpha="0.2"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/pen_blue"
+                    android:onClick="selectTool"
+                    android:layout_toLeftOf="@+id/pen_red"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+                <ImageButton
+                    android:id="@+id/pen_red"
+                    android:layout_width="55px"
+                    android:layout_height="55px"
+                    android:background="@drawable/pen_red_filled"
+                    android:onClick="selectTool"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/appbar_padding_middle"
+                    android:layout_marginRight="@dimen/appbar_padding_middle"
+                    android:layout_gravity="center"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!--android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_dialog_email" /-->
+
+
+</android.support.design.widget.CoordinatorLayout>
