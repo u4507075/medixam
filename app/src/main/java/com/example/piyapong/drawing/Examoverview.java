@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -49,12 +50,21 @@ public class Examoverview extends DialogFragment {
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
 // Each row in the list stores country name, currency and flag
+        /*
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
         for(int i=0;i<50;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
             //hm.put("txt", ""+i);
             hm.put("flag", Integer.toString(R.drawable.noimage) );
+            aList.add(hm);
+        }*/
+
+        List<HashMap<String,Bitmap>> aList = new ArrayList<HashMap<String,Bitmap>>();
+        for(int i=0;i<Variable.TOTALPAGE;i++){
+            HashMap<String, Bitmap> hm = new HashMap<String,Bitmap>();
+            //hm.put("txt", ""+i);
+            hm.put("flag", Variable.THUMBNAIL[i] );
             aList.add(hm);
         }
 

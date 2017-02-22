@@ -1,6 +1,8 @@
 package com.example.piyapong.drawing;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -12,7 +14,7 @@ import java.lang.reflect.Field;
 /**
  * Created by Piyapong on 19/02/2017.
  */
-public class Pageviewer extends ViewPager {
+public class Pageviewer extends ViewPager{
 
     public Pageviewer(Context context) {
         super(context);

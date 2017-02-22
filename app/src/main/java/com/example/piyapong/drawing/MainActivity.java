@@ -4,7 +4,12 @@ import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 
@@ -29,9 +34,15 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import thumbnail.SaveThumbnail;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private Pageviewer mViewPager;
+
+    Bitmap bitmap = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
+    Canvas canvas = new Canvas(bitmap);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +92,29 @@ public class MainActivity extends AppCompatActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (Pageviewer) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(20);
+        mViewPager.setOffscreenPageLimit(5);
+
+        //set current selected tool
+
+        selectTool(findViewById(Variable.CURRENTTOOLID));
+
+
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                new SaveThumbnail(mViewPager).execute();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -117,6 +153,17 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
     */
+public Fragment getVisibleFragment(){
+    FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+    List<Fragment> fragments = fragmentManager.getFragments();
+    if(fragments != null){
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+    }
+    return null;
+}
     @Override
     protected void onResume()
     {
@@ -178,8 +225,31 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            rootView.setTag("EXAM"+getArguments().getInt(ARG_SECTION_NUMBER));
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            //ArrayList handdrawingpath = Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
+            //ArrayList highlightpath = Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
+            if(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]==null)
+            {
+                Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1] = new ArrayList();
+            }
+            if(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]==null)
+            {
+                Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1] = new ArrayList();
+            }
+
+            //add paintview into handdrawingview
+            Handdrawingview handdrawingview = (Handdrawingview) rootView.findViewById(R.id.handdrawinglayer);
+            handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]);
+            Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
+            paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]);
+            //paintdrawingview.setPath(highlightpath);
+            handdrawingview.setPaintview(paintdrawingview);
+
+            //handdrawingview.invalidate();
+            //paintdrawingview.invalidate();
 
             WebView question = (WebView) rootView.findViewById(R.id.question);
             //question.getSettings().setBuiltInZoomControls(true);
@@ -209,6 +279,24 @@ public class MainActivity extends AppCompatActivity {
 
             return rootView;
         }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+            if(isVisibleToUser)
+            {
+                View v = getView();
+                if(v!=null)
+                {
+                    Handdrawingview handdrawingview = (Handdrawingview) v.findViewById(R.id.handdrawinglayer);
+                    handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]);
+                    Paintdrawingview paintdrawingview = (Paintdrawingview) v.findViewById(R.id.highlightlayer);
+                    paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1]);
+                    handdrawingview.setPaintview(paintdrawingview);
+                }
+            }
+        }
+
     }
 
     /**
@@ -231,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             // Show 3 total pages.
-            return 200;
+            return Variable.TOTALPAGE;
         }
 
         @Override
@@ -248,8 +336,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    //View currenttool;
     public void selectTool(View view) {
+        //currenttool = view;
         ((ImageButton) findViewById(R.id.eraser)).setAlpha(0.2f);
         ((ImageButton) findViewById(R.id.paint_blue)).setAlpha(0.2f);
         ((ImageButton)findViewById(R.id.paint_blue)).setBackgroundResource(R.drawable.paint_blue);
@@ -268,32 +357,55 @@ public class MainActivity extends AppCompatActivity {
         if(view.getId()==R.id.paint_blue)
         {
             ((ImageButton)findViewById(R.id.paint_blue)).setBackgroundResource(R.drawable.paint_blue_filled);
-            Variable.CURRENTTOOL = Variable.PAINT_BULE;
+            //Variable.CURRENTTOOL = Variable.PAINT_BULE;
+            Variable.CURRENTTOOL = Variable.PAINT;
+            Variable.CURRENTCOLOR = R.color.colorHighlightBlue;
+            Variable.CURRENTTOOLID = R.id.paint_blue;
         }
         else if(view.getId()==R.id.paint_green)
         {
             ((ImageButton)findViewById(R.id.paint_green)).setBackgroundResource(R.drawable.paint_green_filled);
-            Variable.CURRENTTOOL = Variable.PAINT_GREEN;
+            //Variable.CURRENTTOOL = Variable.PAINT_GREEN;
+            Variable.CURRENTTOOL = Variable.PAINT;
+            Variable.CURRENTCOLOR = R.color.colorHighlightGreen;
+            Variable.CURRENTTOOLID = R.id.paint_green;
         }
         else if(view.getId()==R.id.paint_red)
         {
             ((ImageButton)findViewById(R.id.paint_red)).setBackgroundResource(R.drawable.paint_red_filled);
-            Variable.CURRENTTOOL = Variable.PAINT_RED;
+            //Variable.CURRENTTOOL = Variable.PAINT_RED;
+            Variable.CURRENTTOOL = Variable.PAINT;
+            Variable.CURRENTCOLOR = R.color.colorHighlightRed;
+            Variable.CURRENTTOOLID = R.id.paint_red;
         }
         else if(view.getId()==R.id.pen_blue)
         {
             ((ImageButton)findViewById(R.id.pen_blue)).setBackgroundResource(R.drawable.pen_blue_filled);
-            Variable.CURRENTTOOL = Variable.PEN_BULE;
+            //Variable.CURRENTTOOL = Variable.PEN_BULE;
+            Variable.CURRENTTOOL = Variable.PEN;
+            Variable.CURRENTCOLOR = R.color.colorBlue;
+            Variable.CURRENTTOOLID = R.id.pen_blue;
         }
         else if(view.getId()==R.id.pen_green)
         {
             ((ImageButton)findViewById(R.id.pen_green)).setBackgroundResource(R.drawable.pen_green_filled);
-            Variable.CURRENTTOOL = Variable.PEN_GREEN;
+            //Variable.CURRENTTOOL = Variable.PEN_GREEN;
+            Variable.CURRENTTOOL = Variable.PEN;
+            Variable.CURRENTCOLOR = R.color.colorGreen;
+            Variable.CURRENTTOOLID = R.id.pen_green;
         }
         else if(view.getId()==R.id.pen_red)
         {
             ((ImageButton)findViewById(R.id.pen_red)).setBackgroundResource(R.drawable.pen_red_filled);
-            Variable.CURRENTTOOL = Variable.PEN_RED;
+            //Variable.CURRENTTOOL = Variable.PEN_RED;
+            Variable.CURRENTTOOL = Variable.PEN;
+            Variable.CURRENTCOLOR = R.color.colorRed;
+            Variable.CURRENTTOOLID = R.id.pen_red;
+        }
+        else if(view.getId()==R.id.eraser)
+        {
+            Variable.CURRENTTOOL = Variable.EREASER;
+            Variable.CURRENTTOOLID = R.id.eraser;
         }
     }
 

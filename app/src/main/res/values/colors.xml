@@ -9,8 +9,11 @@
     <color name="colorLightblue">#82CAFA</color>
     <color name="colorPastelblue">#D1D0CE</color>
     <color name="colorDarkseablue">#2B3856</color>
-    <color name="colorRed">#E0121C</color>
-    <color name="colorBlue">#006DF0</color>
-    <color name="colorGreen">#22B005</color>
+    <color name="colorRed">#99E0121C</color>
+    <color name="colorBlue">#99006DF0</color>
+    <color name="colorGreen">#9922B005</color>
+    <color name="colorHighlightRed">#ffb7b7</color>
+    <color name="colorHighlightBlue">#a8d1ff</color>
+    <color name="colorHighlightGreen">#98ff98</color>
     <color name="colorText">#000000</color>
 </resources>

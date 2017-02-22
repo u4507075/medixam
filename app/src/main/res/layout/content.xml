@@ -12,13 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <com.example.piyapong.drawing.Paintdrawingview
+            android:id="@+id/highlightlayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
-            android:id="@+id/highlightlayer">
+            android:background="#00000000"/>
 
-        </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -158,18 +157,12 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <RelativeLayout
+        <com.example.piyapong.drawing.Handdrawingview
+            android:id="@+id/handdrawinglayer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#00000000"
-            android:id="@+id/drawlayer">
-
-        </RelativeLayout>
-        <com.example.piyapong.drawing.Handdrawingview
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00000000"/>
+            />
 
     </FrameLayout>
 </LinearLayout>
