@@ -29,6 +29,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Base64;
 import android.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +51,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i=0;i<Variable.TOTALPAGE;i++)
         {
-            //addThumbnailtoCache("thumbnail"+i,R.drawable.noimage);
+            //addThumbnailtoCache("thumbnail"+i,BitmapFactory.decodeResource(getResources(), R.drawable.noimage));
         }
 
 /*
@@ -439,13 +441,29 @@ public class MainActivity extends AppCompatActivity {
         vv.show(getFragmentManager(),"Exam overview");
     }
 
-    public static void addThumbnailtoCache(String key, String value)
+    public static void addThumbnailtoCache(String key, Bitmap value)
     {
-        thumbnail.putString(key,value);
+        thumbnail.putString(key, encodeTobase64(value));
+
     }
-    public static String getThumbnailtoCache(String key)
+    public static Bitmap getThumbnailtoCache(String key)
     {
-        return thumbnail.getString(key);
+        return decodeBase64(thumbnail.getString(key));
+    }
+    private static String encodeTobase64(Bitmap image)
+    {
+        Bitmap immagex=image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+        return imageEncoded;
+    }
+
+    private static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
 

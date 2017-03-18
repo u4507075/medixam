@@ -58,7 +58,7 @@ class Thumbnailthread implements Runnable
             //mViewPager.getAdapter().notifyDataSetChanged();
             //Main.gridView.invalidateViews();
             //MainActivity.addBitmapToMemoryCache("thumbnail"+mViewPager.getCurrentItem(),new BitmapDrawable(resized));
-
+            MainActivity.addThumbnailtoCache("thumbnail"+mViewPager.getCurrentItem(),resized);
             v1.setDrawingCacheEnabled(false);
         }
     }

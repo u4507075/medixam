@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import thumbnail.Imageadapter;
+import thumbnail.MyAdapter;
 
 /**
  * Created by Piyapong on 18/02/2017.
@@ -118,12 +120,23 @@ public class Examoverview extends DialogFragment {
 // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
 // Each row in the list stores country name, currency and flag
+/*
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
         for(int i=0;i<50;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
             //hm.put("txt", ""+i);
             hm.put("flag", Integer.toString(R.drawable.noimage) );
+            aList.add(hm);
+        }*/
+
+        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+
+        for(int i=0;i<Variable.TOTALPAGE;i++){
+            HashMap<String, String> hm = new HashMap<String,String>();
+            //hm.put("txt", ""+i);
+            //hm.put("flag", BitmapFactory.decodeResource(getResources(), R.drawable.dog) );
+            hm.put("flag", "thumbnail"+i);
             aList.add(hm);
         }
 
@@ -137,7 +150,7 @@ public class Examoverview extends DialogFragment {
 
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
-        SimpleAdapter adapter = new SimpleAdapter(getActivity(), aList, R.layout.grid_single, from, to);
+        MyAdapter adapter = new MyAdapter(getActivity(), aList, R.layout.grid_single, from, to);
         // Prepare grid view
         GridView gridView = new GridView(getActivity());
 
