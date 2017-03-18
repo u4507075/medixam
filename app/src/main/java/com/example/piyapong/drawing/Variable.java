@@ -21,7 +21,7 @@ public class Variable {
     public  static ArrayList[] HIGHLIGHTPATH = new ArrayList[TOTALPAGE];
 
     //Thumbnail
-    public static Bitmap[] THUMBNAIL = new Bitmap[TOTALPAGE];
+    //public static Bitmap[] THUMBNAIL = new Bitmap[TOTALPAGE];
 
     //Drawing tool
     public static final int EREASER = 0;

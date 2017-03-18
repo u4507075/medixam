@@ -3,6 +3,8 @@ package com.example.piyapong.drawing;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import thumbnail.Imageadapter;
 
 /**
  * Created by Piyapong on 18/02/2017.
@@ -50,21 +54,76 @@ public class Examoverview extends DialogFragment {
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
 // Each row in the list stores country name, currency and flag
+/*
+        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+
+        for(int i=0;i<50;i++){
+            HashMap<String, String> hm = new HashMap<String,String>();
+            //hm.put("txt", ""+i);
+            hm.put("flag", Integer.toString(R.drawable.dog) );
+            aList.add(hm);
+        }
+*/
         /*
+        List<HashMap<String,Object>> aList = new ArrayList<HashMap<String,Object>>();
+        for(int i=0;i<Variable.TOTALPAGE;i++){
+            HashMap<String, Object> hm = new HashMap<String,Object>();
+            //hm.put("txt", ""+i);
+            hm.put("flag", Variable.THUMBNAIL[i] );
+            aList.add(hm);
+        }
+*/
+        /*
+        List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+        // Keys used in Hashmap
+        //String[] from = { "flag","txt"};
+        String[] from = { "flag"};
+
+        // Ids of views in listview_layout
+        //int[] to = { R.id.flag,R.id.txt};
+        int[] to = { R.id.image};
+
+        // Instantiating an adapter to store each items
+        // R.layout.listview_layout defines the layout of each item
+        Imageadapter adapter = new Imageadapter(getActivity(), aList, R.layout.grid_single, from, to);
+        // Prepare grid view
+        GridView gridView = new GridView(getActivity());
+
+        gridView.setAdapter(adapter);
+        //gridView.setAdapter(new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, aList));
+        gridView.setColumnWidth(300);
+        gridView.setVerticalSpacing(15);
+        gridView.setHorizontalSpacing(15);
+        gridView.setGravity(Gravity.CENTER);
+        //gridView.setNumColumns(10);
+        gridView.setNumColumns(GridView.AUTO_FIT);
+        //gridView.setStretchMode(GridView.NO_STRETCH);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // do something here
+            }
+        });
+
+
+        builder.setView(gridView)
+                /*
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                // sign in the user ...
+            }
+        })*/
+
+// Instantiating an adapter to store each items
+        // R.layout.listview_layout defines the layout of each item
+// Each row in the list stores country name, currency and flag
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
 
         for(int i=0;i<50;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
             //hm.put("txt", ""+i);
             hm.put("flag", Integer.toString(R.drawable.noimage) );
-            aList.add(hm);
-        }*/
-
-        List<HashMap<String,Bitmap>> aList = new ArrayList<HashMap<String,Bitmap>>();
-        for(int i=0;i<Variable.TOTALPAGE;i++){
-            HashMap<String, Bitmap> hm = new HashMap<String,Bitmap>();
-            //hm.put("txt", ""+i);
-            hm.put("flag", Variable.THUMBNAIL[i] );
             aList.add(hm);
         }
 
@@ -74,7 +133,7 @@ public class Examoverview extends DialogFragment {
 
         // Ids of views in listview_layout
         //int[] to = { R.id.flag,R.id.txt};
-        int[] to = { R.id.flag};
+        int[] to = {R.id.image};
 
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
@@ -97,15 +156,8 @@ public class Examoverview extends DialogFragment {
                 // do something here
             }
         });
+
         builder.setView(gridView)
-                /*
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-                // sign in the user ...
-            }
-        })
-                */
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Examoverview.this.getDialog().cancel();

@@ -1,9 +1,11 @@
 package thumbnail;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.View;
 
+import com.example.piyapong.drawing.MainActivity;
 import com.example.piyapong.drawing.Pageviewer;
 import com.example.piyapong.drawing.Variable;
 
@@ -52,9 +54,11 @@ class Thumbnailthread implements Runnable
             Bitmap bmScreen = Bitmap.createBitmap(v1.getDrawingCache(true));
             Bitmap resized = Bitmap.createScaledBitmap(bmScreen, 310, 495, true);
 
-            Variable.THUMBNAIL[mViewPager.getCurrentItem()] = resized;
+            //Variable.THUMBNAIL[mViewPager.getCurrentItem()] = resized;
             //mViewPager.getAdapter().notifyDataSetChanged();
             //Main.gridView.invalidateViews();
+            //MainActivity.addBitmapToMemoryCache("thumbnail"+mViewPager.getCurrentItem(),new BitmapDrawable(resized));
+
             v1.setDrawingCacheEnabled(false);
         }
     }
