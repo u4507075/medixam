@@ -52,13 +52,13 @@ class Thumbnailthread implements Runnable
         {
             v1.setDrawingCacheEnabled(true);
             Bitmap bmScreen = Bitmap.createBitmap(v1.getDrawingCache(true));
-            Bitmap resized = Bitmap.createScaledBitmap(bmScreen, 310, 495, true);
+            Bitmap resized = Bitmap.createScaledBitmap(bmScreen, Variable.SCREEN_WIDTH/4, Variable.SCREEN_HEIGHT/4, true);
 
             //Variable.THUMBNAIL[mViewPager.getCurrentItem()] = resized;
             //mViewPager.getAdapter().notifyDataSetChanged();
             //Main.gridView.invalidateViews();
             //MainActivity.addBitmapToMemoryCache("thumbnail"+mViewPager.getCurrentItem(),new BitmapDrawable(resized));
-            MainActivity.addThumbnailtoCache("thumbnail"+mViewPager.getCurrentItem(),resized);
+            MainActivity.addThumbnailtoCache("thumbnail"+(mViewPager.getCurrentItem()-1),resized);
             v1.setDrawingCacheEnabled(false);
         }
     }

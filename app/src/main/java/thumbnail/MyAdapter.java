@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.piyapong.drawing.MainActivity;
 import com.example.piyapong.drawing.R;
+import com.example.piyapong.drawing.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +132,7 @@ public class MyAdapter extends SimpleAdapter{
                             }
                             catch (Exception ex)
                             {
-                                ((ImageView) v).setImageBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.noimage));
+                                ((ImageView) v).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.noimage), Variable.SCREEN_WIDTH/4, Variable.SCREEN_HEIGHT/4, true));
                             }
                         }else if(data instanceof Bitmap) {
                             ((ImageView) v).setImageBitmap((Bitmap)data);

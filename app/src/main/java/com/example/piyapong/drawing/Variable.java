@@ -12,11 +12,12 @@ import java.util.ArrayList;
  */
 public class Variable {
 
-
+    public static int SCREEN_WIDTH;
+    public static int SCREEN_HEIGHT;
 
     public static Bitmap bitmap = Bitmap.createBitmap(Resources.getSystem().getDisplayMetrics().widthPixels, Resources.getSystem().getDisplayMetrics().heightPixels, Bitmap.Config.ARGB_8888);
     public static Canvas canvas = new Canvas(bitmap);
-    public static int TOTALPAGE = 20;
+    public static int TOTALPAGE = 200;
     public  static ArrayList[] HANDDRAWINGPATH = new ArrayList[TOTALPAGE];
     public  static ArrayList[] HIGHLIGHTPATH = new ArrayList[TOTALPAGE];
 

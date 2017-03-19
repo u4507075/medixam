@@ -131,18 +131,22 @@ public class Examoverview extends DialogFragment {
         }*/
 
         List<HashMap<String,String>> aList = new ArrayList<HashMap<String,String>>();
+        //HashMap<String, String> id = new HashMap<String,String>();
 
         for(int i=0;i<Variable.TOTALPAGE;i++){
             HashMap<String, String> hm = new HashMap<String,String>();
+            //id.put("examnumber",""+(i+1));
+
             //hm.put("txt", ""+i);
             //hm.put("flag", BitmapFactory.decodeResource(getResources(), R.drawable.dog) );
             hm.put("flag", "thumbnail"+i);
             aList.add(hm);
+            //aList.add(id);
         }
 
         // Keys used in Hashmap
         //String[] from = { "flag","txt"};
-        String[] from = { "flag"};
+        String[] from = {"flag"};
 
         // Ids of views in listview_layout
         //int[] to = { R.id.flag,R.id.txt};

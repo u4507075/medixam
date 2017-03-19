@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -29,8 +30,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
+import android.text.style.StyleSpan;
+import android.text.style.SubscriptSpan;
+import android.text.style.SuperscriptSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.util.Base64;
 import android.util.LruCache;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,71 +98,52 @@ public class MainActivity extends AppCompatActivity {
         thumbnail = new Loadbitmap(getApplicationContext());
         thumbnail.clearDiskcache();
 
-
-        for(int i=0;i<Variable.TOTALPAGE;i++)
-        {
-            //addThumbnailtoCache("thumbnail"+i,BitmapFactory.decodeResource(getResources(), R.drawable.noimage));
-        }
-
-/*
-        ImageCache.ImageCacheParams cacheParams =
-                new ImageCache.ImageCacheParams(this, "thumbs");
-
-        cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of app memory
-        imagecache = new ImageCache();
-        imagecache.initDiskCache();
-
-
-        for(int i=0;i<Variable.TOTALPAGE;i++)
-        {
-            addBitmapToMemoryCache("thumbnail"+i, new BitmapDrawable(BitmapFactory.decodeResource(getResources(),R.drawable.noimage)));
-        }
-
-
-/*
-        View decorView = getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-*/
-        //hideSystemUI();
-
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (Pageviewer) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(5);
-
         //set current selected tool
 
         selectTool(findViewById(Variable.CURRENTTOOLID));
 
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-            }
+            // Set up the ViewPager with the sections adapter.
+            mViewPager = (Pageviewer) findViewById(R.id.container);
+            mViewPager.setAdapter(mSectionsPagerAdapter);
+            mViewPager.setOffscreenPageLimit(5);
 
-            @Override
-            public void onPageSelected(int position) {
-                new SaveThumbnail(mViewPager).execute();
-            }
+            mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                @Override
+                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+                                           int oldBottom) {
+                    // its possible that the layout is not complete in which case
+                    // we will get all zero values for the positions, so ignore the event
+                    if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+                        return;
+                    }
 
-            }
-        });
+                    // Do what you need to do with the height/width since they are now set
+                    Variable.SCREEN_WIDTH = right;
+                    Variable.SCREEN_HEIGHT = bottom;
+                }
+            });
+
+
+            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    new SaveThumbnail(mViewPager).execute();
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -262,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
             return fragment;
         }
 
+        @TargetApi(Build.VERSION_CODES.N)
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -290,7 +284,8 @@ public class MainActivity extends AppCompatActivity {
             //handdrawingview.invalidate();
             //paintdrawingview.invalidate();
 
-            WebView question = (WebView) rootView.findViewById(R.id.question);
+            //WebView question = (WebView) rootView.findViewById(R.id.question);
+            TextView question = (TextView) rootView.findViewById(R.id.question);
             //question.getSettings().setBuiltInZoomControls(true);
 
             String summary = "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
@@ -298,19 +293,59 @@ public class MainActivity extends AppCompatActivity {
             String questioncontent = new String(Variable.htmlquestiontemplate);
             questioncontent = questioncontent.replace("%s", summary);
             //question.loadData(questioncontent, "text/html; charset=utf-8", null);
-            question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
+            //question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
             question.setBackgroundColor(Color.TRANSPARENT);
-            question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            //question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            //question.setText(Html.fromHtml(questioncontent));
+            SpannableString styledString
+                    = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
+                    + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
 
-            String choicecontent = new String(Variable.htmlchoicetemplate);
+            // make the text twice as large
+            styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
+
+            // make text bold
+            styledString.setSpan(new StyleSpan(Typeface.BOLD), 7, 11, 0);
+
+            // underline text
+            styledString.setSpan(new UnderlineSpan(), 13, 23, 0);
+
+            // make text italic
+            styledString.setSpan(new StyleSpan(Typeface.ITALIC), 25, 31, 0);
+
+            styledString.setSpan(new StrikethroughSpan(), 33, 46, 0);
+
+            // change text color
+            styledString.setSpan(new ForegroundColorSpan(Color.GREEN), 48, 55, 0);
+
+            // highlight text
+            styledString.setSpan(new BackgroundColorSpan(Color.CYAN), 57, 68, 0);
+
+            // superscript
+            styledString.setSpan(new SuperscriptSpan(), 72, 83, 0);
+            // make the superscript text smaller
+            styledString.setSpan(new RelativeSizeSpan(0.5f), 72, 83, 0);
+
+            // subscript
+            styledString.setSpan(new SubscriptSpan(), 87, 96, 0);
+            // make the subscript text smaller
+            styledString.setSpan(new RelativeSizeSpan(0.5f), 87, 96, 0);
+
+            // url
+            styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
+
+            question.setText(styledString);
+
+            String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
             choicecontent = choicecontent.replace("%s", summary);
             int[] choices = {R.id.choicecontent1, R.id.choicecontent2, R.id.choicecontent3, R.id.choicecontent4, R.id.choicecontent5};
             for (int i = 0; i < choices.length; i++) {
-                WebView choice = (WebView) rootView.findViewById(choices[i]);
+                TextView choice = (TextView) rootView.findViewById(choices[i]);
                 //choice.loadData(choicecontent, "text/html; charset=utf-8", null);
-                choice.loadDataWithBaseURL(null, choicecontent, "text/html", "utf-8", null);
+                //choice.loadDataWithBaseURL(null, choicecontent, "text/html", "utf-8", null);
                 choice.setBackgroundColor(Color.TRANSPARENT);
-                choice.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                //choice.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                choice.setText(choicecontent);
             }
 
 
