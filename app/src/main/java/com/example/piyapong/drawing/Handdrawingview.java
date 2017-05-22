@@ -9,11 +9,14 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -252,6 +255,7 @@ public class Handdrawingview extends View{
     //private Canvas canvas;
     private Path path = new Path();
     private Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+
     //private Paint paint;
 
     private float mX, mY;
@@ -284,7 +288,7 @@ public class Handdrawingview extends View{
 
 
             if(Variable.bitmap!=null) {
-                if(Variable.CURRENTTOOL==Variable.PEN)
+                if(Variable.CURRENTTOOL==Variable.PEN && !selectchoice)
                 {
                     //canvas.drawBitmap(Variable.bitmap, 0, 0, bitmapPaint);
                     canvas.drawPath(path,paint);
@@ -308,7 +312,14 @@ public class Handdrawingview extends View{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+        if(event.getAction()==MotionEvent.ACTION_DOWN)
+        {
+            float x = event.getX();
+            float y = event.getY();
+            selectchoice(x,y);
+        }
+
+        if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS && !selectchoice) {
             float x = event.getX();
             float y = event.getY();
             paint.setColor(ContextCompat.getColor(context, Variable.CURRENTCOLOR));
@@ -403,6 +414,7 @@ public class Handdrawingview extends View{
         path.moveTo(x, y);
         mX = x;
         mY = y;
+
     }
 
     private void touchMove(Path path, float x, float y) {
@@ -453,11 +465,47 @@ public class Handdrawingview extends View{
             }
         }
 
+    }
+    ArrayList choices;
+    boolean selectchoice = false;
+    public void setChoices(ArrayList choices)
+    {
+        this.choices = choices;
+    }
+    private void selectchoice(float x, float y)
+    {
+        selectchoice = false;
+        for(int i=0;i<choices.size();i++)
+        {
+            TextView c = (TextView)choices.get(i);
+            int[] xy = new int[2];
+            c.getLocationOnScreen(xy);
+            int[] mainxy = new int[2];
+            this.getLocationOnScreen(mainxy);
+            RectF r = new RectF(xy[0]-mainxy[0],xy[1]-mainxy[1],xy[0]+c.getWidth()-mainxy[0],xy[1]+c.getHeight()-mainxy[1]);
+            if(r.contains(x,y))
+            {
+                c.setBackgroundResource(R.drawable.select);
+                c.invalidate();
+                selectchoice = true;
+                for(int j=0;j<choices.size();j++)
+                {
+                    TextView cc = (TextView)choices.get(j);
+                    if(j!=i)
+                    {
+                        cc.setBackgroundResource(R.drawable.unselect);
+                        cc.invalidate();
+                    }
+                }
+                break;
+            }
+
+        }
 
     }
 
 
-
+/*
     public Bitmap getBitmap() {
         this.setDrawingCacheEnabled(true);
         this.buildDrawingCache();
@@ -473,6 +521,7 @@ public class Handdrawingview extends View{
         this.canvas = canvas;
     }
 */
+/*
     //Clear screen
     public void clear() {
         Variable.bitmap.eraseColor(Color.WHITE);
@@ -484,5 +533,5 @@ public class Handdrawingview extends View{
     public void setPathColor(int color) {
         paint.setColor(color);
     }
-
+*/
 }

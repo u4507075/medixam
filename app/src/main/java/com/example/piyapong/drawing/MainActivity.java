@@ -276,6 +276,13 @@ public class MainActivity extends AppCompatActivity {
             //add paintview into handdrawingview
             Handdrawingview handdrawingview = (Handdrawingview) rootView.findViewById(R.id.handdrawinglayer);
             handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            ArrayList choicelist = new ArrayList();
+            choicelist.add((TextView) rootView.findViewById(R.id.choice1));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice2));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice3));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice4));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice5));
+            handdrawingview.setChoices(choicelist);
             Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
             paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
@@ -363,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
                     Paintdrawingview paintdrawingview = (Paintdrawingview) v.findViewById(R.id.highlightlayer);
                     paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
                     handdrawingview.setPaintview(paintdrawingview);
+
                 }
             }
         }

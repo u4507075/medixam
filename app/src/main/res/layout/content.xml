@@ -57,8 +57,8 @@
                             android:layout_height="@dimen/choicesize"
                             android:textSize="@dimen/textsize"
                             android:textAlignment="center"
-                            android:background="@drawable/round"
-                            android:textColor="@color/colorWhitesmoke"
+                            android:background="@drawable/unselect"
+                            android:textColor="@color/colorText"
                             android:gravity = "top"
                             android:text="A"/>
                     <TextView
@@ -84,7 +84,8 @@
                         android:layout_height="@dimen/choicesize"
                         android:textSize="@dimen/textsize"
                         android:textAlignment="center"
-                        android:background="@drawable/round"
+                        android:background="@drawable/unselect"
+                        android:textColor="@color/colorText"
                         android:gravity = "center"
                         android:text="B"/>
                     <TextView
@@ -109,7 +110,8 @@
                         android:layout_height="@dimen/choicesize"
                         android:textSize="@dimen/textsize"
                         android:textAlignment="center"
-                        android:background="@drawable/round"
+                        android:background="@drawable/unselect"
+                        android:textColor="@color/colorText"
                         android:gravity = "center"
                         android:text="C"/>
                     <TextView
@@ -134,7 +136,8 @@
                         android:layout_height="@dimen/choicesize"
                         android:textSize="@dimen/textsize"
                         android:textAlignment="center"
-                        android:background="@drawable/round"
+                        android:background="@drawable/unselect"
+                        android:textColor="@color/colorText"
                         android:gravity = "center"
                         android:text="D"/>
                     <TextView
@@ -159,7 +162,8 @@
                         android:layout_height="@dimen/choicesize"
                         android:textSize="@dimen/textsize"
                         android:textAlignment="center"
-                        android:background="@drawable/round"
+                        android:background="@drawable/unselect"
+                        android:textColor="@color/colorText"
                         android:gravity = "center"
                         android:text="E"/>
 
