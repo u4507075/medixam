@@ -289,10 +289,6 @@ public class Handdrawingview extends View{
                     //canvas.drawBitmap(Variable.bitmap, 0, 0, bitmapPaint);
                     canvas.drawPath(path,paint);
                 }
-                else if(Variable.CURRENTTOOL==Variable.PAINT)
-                {
-                    paintview.drawPath(path,paint);
-                }
         }
         if(previouspath!=null) {
             Variable.bitmap.eraseColor(Color.TRANSPARENT);
@@ -316,10 +312,10 @@ public class Handdrawingview extends View{
             float x = event.getX();
             float y = event.getY();
             paint.setColor(ContextCompat.getColor(context, Variable.CURRENTCOLOR));
-            Path mypath = this.path;
+            //Path mypath = this.path;
             if(Variable.CURRENTTOOL==Variable.PEN)
             {
-                mypath = this.path;
+                //mypath = this.path;
                 paint.setStrokeJoin(Paint.Join.ROUND);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStrokeWidth(PEN_STROKE_WIDTH);
@@ -333,28 +329,56 @@ public class Handdrawingview extends View{
             }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    touchStart(mypath, x, y);
-                    invalidate();
+                    touchStart(path, x, y);
+                    if(Variable.CURRENTTOOL==Variable.PEN)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
 
                     if(Variable.CURRENTTOOL==Variable.PEN)
                     {
-                        touchMove(mypath, x, y);
+                        touchMove(path, x, y);
                     }
                     else if (Variable.CURRENTTOOL==Variable.PAINT)
                     {
-                        touchMove(mypath, x, mY);
+                        touchMove(path, x, mY);
                     }
                     else if (Variable.CURRENTTOOL==Variable.EREASER)
                     {
                         touchMoveeraser(x,y);
                     }
-                    invalidate();
+
+                    if(Variable.CURRENTTOOL==Variable.PEN || Variable.CURRENTTOOL==Variable.EREASER)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
-                    touchUp(mypath);
-                    invalidate();
+                    touchUp(path);
+                    if(Variable.CURRENTTOOL==Variable.PEN)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
             }
         }
@@ -424,7 +448,9 @@ public class Handdrawingview extends View{
         }
         else if (Variable.CURRENTTOOL==Variable.PAINT)
         {
-            paintview.addPath(m);
+            if(paintview!=null) {
+                paintview.addPath(m);
+            }
         }
 
 

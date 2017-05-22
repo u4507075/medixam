@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Drawing</string>
+    <string name="app_name">Drawingbeta</string>
     <string name="action_settings">grid view</string>
     <string name="section_format">Page %1$d</string>
 </resources>

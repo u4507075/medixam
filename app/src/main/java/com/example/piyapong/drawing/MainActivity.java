@@ -278,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
             handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
             Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
             paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-            //paintdrawingview.setPath(highlightpath);
+
             handdrawingview.setPaintview(paintdrawingview);
 
             //handdrawingview.invalidate();
