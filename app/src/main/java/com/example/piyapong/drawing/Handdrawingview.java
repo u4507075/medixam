@@ -14,12 +14,15 @@ import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import thumbnail.SaveThumbnail;
 
 /**
  * Created by Piyapong on 19/02/2017.
@@ -47,6 +50,8 @@ public class Handdrawingview extends View{
     private final RectF dirtyRect = new RectF();
     Paintdrawingview paintview;
     Context context;
+    ScaleGestureDetector scale;
+    Pageviewer mViewPager;
     public Handdrawingview(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -56,6 +61,9 @@ public class Handdrawingview extends View{
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(PEN_STROKE_WIDTH);
+
+        //Zoom image
+        scale = new ScaleGestureDetector(this.getContext(), new Zoomimage(context));
 
     }
 
@@ -283,6 +291,10 @@ public class Handdrawingview extends View{
         this.previouspath = previouspath;
         invalidate();
     }
+    public void setPageviewer(Pageviewer mViewPager)
+    {
+        this.mViewPager = mViewPager;
+    }
     @Override
     protected void onDraw(Canvas canvas) {
 
@@ -312,11 +324,16 @@ public class Handdrawingview extends View{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //zoom image
+        scale.onTouchEvent(event);
+
+        //select choice
         if(event.getAction()==MotionEvent.ACTION_DOWN)
         {
             float x = event.getX();
             float y = event.getY();
             selectchoice(x,y);
+            //new SaveThumbnail(mViewPager).execute();
         }
 
         if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS && !selectchoice) {
@@ -464,7 +481,7 @@ public class Handdrawingview extends View{
                 paintview.addPath(m);
             }
         }
-
+        //MainActivity.saveThumbnail();
     }
     ArrayList choices;
     boolean selectchoice = false;
@@ -497,6 +514,7 @@ public class Handdrawingview extends View{
                         cc.invalidate();
                     }
                 }
+                //MainActivity.saveThumbnail();
                 break;
             }
 

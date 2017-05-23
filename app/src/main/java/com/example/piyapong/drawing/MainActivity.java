@@ -19,7 +19,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Environment;
+
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -69,6 +73,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import disccache.Loadbitmap;
 import thumbnail.SaveThumbnail;
@@ -90,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private Pageviewer mViewPager;
     public static Loadbitmap thumbnail;
+    Examoverview examoverview = new Examoverview();;
+
+    //static int startpage = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,46 +114,52 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (Pageviewer) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            mViewPager.setOffscreenPageLimit(5);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (Pageviewer) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(5);
 
-            mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                                           int oldBottom) {
-                    // its possible that the layout is not complete in which case
-                    // we will get all zero values for the positions, so ignore the event
-                    if (left == 0 && top == 0 && right == 0 && bottom == 0) {
-                        return;
-                    }
-
-                    // Do what you need to do with the height/width since they are now set
-                    Variable.SCREEN_WIDTH = right;
-                    Variable.SCREEN_HEIGHT = bottom;
-                }
-            });
-
-
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+                                       int oldBottom) {
+                // its possible that the layout is not complete in which case
+                // we will get all zero values for the positions, so ignore the event
+                if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+                    return;
                 }
 
-                @Override
-                public void onPageSelected(int position) {
-                    new SaveThumbnail(mViewPager).execute();
-                }
+                // Do what you need to do with the height/width since they are now set
+                Variable.SCREEN_WIDTH = right;
+                Variable.SCREEN_HEIGHT = bottom;
+            }
+        });
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
 
-                }
-            });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //if(Variable.CURRENTPAGE == position) {
+
+                //}
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+
+        });
+
+        capture();
+        //initscreencapture();
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -239,10 +254,9 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
+        Pageviewer mViewPager;
         public PlaceholderFragment() {
         }
-
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -283,6 +297,7 @@ public class MainActivity extends AppCompatActivity {
             choicelist.add((TextView) rootView.findViewById(R.id.choice4));
             choicelist.add((TextView) rootView.findViewById(R.id.choice5));
             handdrawingview.setChoices(choicelist);
+
             Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
             paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
@@ -307,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             SpannableString styledString
                     = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
                     + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
-
+            /*
             // make the text twice as large
             styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
 
@@ -340,7 +355,7 @@ public class MainActivity extends AppCompatActivity {
 
             // url
             styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
-
+            */
             question.setText(styledString);
 
             String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
@@ -370,13 +385,49 @@ public class MainActivity extends AppCompatActivity {
                     Paintdrawingview paintdrawingview = (Paintdrawingview) v.findViewById(R.id.highlightlayer);
                     paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
                     handdrawingview.setPaintview(paintdrawingview);
-
                 }
             }
         }
 
     }
 
+    public void scrolltopage(final View view) {
+        //Variable.MANUALSLIDE = false;
+        int targetpage = (Integer.parseInt(((TextView) view).getText().toString()) - 1);
+        //Variable.CURRENTPAGE = targetpage;
+        mViewPager.setCurrentItem(targetpage);
+        if(examoverview!=null)
+        {
+            examoverview.closeDialog();
+        }
+        //Variable.MANUALSLIDE = true;
+    }
+    /*
+    public static void saveThumbnail()
+    {
+        new SaveThumbnail(mViewPager).execute();
+    }
+    */
+    private void capture()
+    {
+        Timer t = new Timer();
+
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new SaveThumbnail(mViewPager).execute();
+                    }
+                });
+            }
+        };
+
+        t.scheduleAtFixedRate(task, 0, 1000);
+    }
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -414,6 +465,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
+
 
     //View currenttool;
     public void selectTool(View view) {
@@ -477,11 +531,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showOverviewexam(View v) {
 
-
-
-        Examoverview vv = new Examoverview();
-
-        vv.show(getFragmentManager(),"Exam overview");
+        examoverview.show(getFragmentManager(),"Exam overview");
     }
 
     public static void addThumbnailtoCache(String key, Bitmap value)

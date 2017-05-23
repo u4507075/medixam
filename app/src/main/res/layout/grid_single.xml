@@ -6,6 +6,9 @@
     android:padding="0dp"
 
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/image"
@@ -14,6 +17,16 @@
         android:padding="0dp"
         android:adjustViewBounds="true"
         />
+        <TextView
+            android:id="@+id/index"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="50sp"
+            android:textColor="#66000000"
+            android:gravity = "center"
+            android:onClick="scrolltopage"
+            android:text="1"></TextView>
+    </RelativeLayout>
 
 
 
