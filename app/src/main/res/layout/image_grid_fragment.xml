@@ -20,9 +20,10 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:columnWidth="@dimen/image_thumbnail_size"
-    android:horizontalSpacing="@dimen/image_thumbnail_spacing"
+    android:horizontalSpacing="10dp"
     android:numColumns="auto_fit"
-    android:stretchMode="columnWidth"
-    android:verticalSpacing="@dimen/image_thumbnail_spacing" >
+    android:stretchMode="spacingWidth"
+    android:verticalSpacing="10dp"
+    android:background="#CCF6F6F6">
 
 </GridView>

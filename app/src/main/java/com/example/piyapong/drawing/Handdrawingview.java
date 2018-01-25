@@ -9,14 +9,20 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import thumbnail.SaveThumbnail;
 
 /**
  * Created by Piyapong on 19/02/2017.
@@ -44,6 +50,8 @@ public class Handdrawingview extends View{
     private final RectF dirtyRect = new RectF();
     Paintdrawingview paintview;
     Context context;
+    ScaleGestureDetector scale;
+    Pageviewer mViewPager;
     public Handdrawingview(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
@@ -53,6 +61,9 @@ public class Handdrawingview extends View{
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(PEN_STROKE_WIDTH);
+
+        //Zoom image
+        scale = new ScaleGestureDetector(this.getContext(), new Zoomimage(context));
 
     }
 
@@ -252,6 +263,7 @@ public class Handdrawingview extends View{
     //private Canvas canvas;
     private Path path = new Path();
     private Paint bitmapPaint = new Paint(Paint.DITHER_FLAG);
+
     //private Paint paint;
 
     private float mX, mY;
@@ -279,19 +291,19 @@ public class Handdrawingview extends View{
         this.previouspath = previouspath;
         invalidate();
     }
+    public void setPageviewer(Pageviewer mViewPager)
+    {
+        this.mViewPager = mViewPager;
+    }
     @Override
     protected void onDraw(Canvas canvas) {
 
 
             if(Variable.bitmap!=null) {
-                if(Variable.CURRENTTOOL==Variable.PEN)
+                if(Variable.CURRENTTOOL==Variable.PEN && !selectchoice)
                 {
                     //canvas.drawBitmap(Variable.bitmap, 0, 0, bitmapPaint);
                     canvas.drawPath(path,paint);
-                }
-                else if(Variable.CURRENTTOOL==Variable.PAINT)
-                {
-                    paintview.drawPath(path,paint);
                 }
         }
         if(previouspath!=null) {
@@ -312,14 +324,26 @@ public class Handdrawingview extends View{
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS) {
+        //zoom image
+        scale.onTouchEvent(event);
+
+        //select choice
+        if(event.getAction()==MotionEvent.ACTION_DOWN)
+        {
+            float x = event.getX();
+            float y = event.getY();
+            selectchoice(x,y);
+            //new SaveThumbnail(mViewPager).execute();
+        }
+
+        if(event.getToolType(0) == MotionEvent.TOOL_TYPE_STYLUS && !selectchoice) {
             float x = event.getX();
             float y = event.getY();
             paint.setColor(ContextCompat.getColor(context, Variable.CURRENTCOLOR));
-            Path mypath = this.path;
+            //Path mypath = this.path;
             if(Variable.CURRENTTOOL==Variable.PEN)
             {
-                mypath = this.path;
+                //mypath = this.path;
                 paint.setStrokeJoin(Paint.Join.ROUND);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 paint.setStrokeWidth(PEN_STROKE_WIDTH);
@@ -333,28 +357,56 @@ public class Handdrawingview extends View{
             }
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    touchStart(mypath, x, y);
-                    invalidate();
+                    touchStart(path, x, y);
+                    if(Variable.CURRENTTOOL==Variable.PEN)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
 
                     if(Variable.CURRENTTOOL==Variable.PEN)
                     {
-                        touchMove(mypath, x, y);
+                        touchMove(path, x, y);
                     }
                     else if (Variable.CURRENTTOOL==Variable.PAINT)
                     {
-                        touchMove(mypath, x, mY);
+                        touchMove(path, x, mY);
                     }
                     else if (Variable.CURRENTTOOL==Variable.EREASER)
                     {
                         touchMoveeraser(x,y);
                     }
-                    invalidate();
+
+                    if(Variable.CURRENTTOOL==Variable.PEN || Variable.CURRENTTOOL==Variable.EREASER)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
                 case MotionEvent.ACTION_UP:
-                    touchUp(mypath);
-                    invalidate();
+                    touchUp(path);
+                    if(Variable.CURRENTTOOL==Variable.PEN)
+                    {
+                        invalidate();
+                    }
+                    else if(Variable.CURRENTTOOL==Variable.PAINT)
+                    {
+                        if(paintview!=null) {
+                            paintview.drawPath(path, paint);
+                        }
+                    }
                     break;
             }
         }
@@ -379,6 +431,7 @@ public class Handdrawingview extends View{
         path.moveTo(x, y);
         mX = x;
         mY = y;
+
     }
 
     private void touchMove(Path path, float x, float y) {
@@ -424,14 +477,53 @@ public class Handdrawingview extends View{
         }
         else if (Variable.CURRENTTOOL==Variable.PAINT)
         {
-            paintview.addPath(m);
+            if(paintview!=null) {
+                paintview.addPath(m);
+            }
         }
+        //MainActivity.saveThumbnail();
+    }
+    ArrayList choices;
+    boolean selectchoice = false;
+    public void setChoices(ArrayList choices)
+    {
+        this.choices = choices;
+    }
+    private void selectchoice(float x, float y)
+    {
+        selectchoice = false;
+        for(int i=0;i<choices.size();i++)
+        {
+            TextView c = (TextView)choices.get(i);
+            int[] xy = new int[2];
+            c.getLocationOnScreen(xy);
+            int[] mainxy = new int[2];
+            this.getLocationOnScreen(mainxy);
+            RectF r = new RectF(xy[0]-mainxy[0],xy[1]-mainxy[1],xy[0]+c.getWidth()-mainxy[0],xy[1]+c.getHeight()-mainxy[1]);
+            if(r.contains(x,y))
+            {
+                c.setBackgroundResource(R.drawable.select);
+                c.invalidate();
+                selectchoice = true;
+                for(int j=0;j<choices.size();j++)
+                {
+                    TextView cc = (TextView)choices.get(j);
+                    if(j!=i)
+                    {
+                        cc.setBackgroundResource(R.drawable.unselect);
+                        cc.invalidate();
+                    }
+                }
+                //MainActivity.saveThumbnail();
+                break;
+            }
 
+        }
 
     }
 
 
-
+/*
     public Bitmap getBitmap() {
         this.setDrawingCacheEnabled(true);
         this.buildDrawingCache();
@@ -447,6 +539,7 @@ public class Handdrawingview extends View{
         this.canvas = canvas;
     }
 */
+/*
     //Clear screen
     public void clear() {
         Variable.bitmap.eraseColor(Color.WHITE);
@@ -458,5 +551,5 @@ public class Handdrawingview extends View{
     public void setPathColor(int color) {
         paint.setColor(color);
     }
-
+*/
 }

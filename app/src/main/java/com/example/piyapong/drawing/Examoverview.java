@@ -8,11 +8,13 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -43,8 +45,10 @@ public class Examoverview extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
         }
     }
+
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 
@@ -140,17 +144,18 @@ public class Examoverview extends DialogFragment {
             //hm.put("txt", ""+i);
             //hm.put("flag", BitmapFactory.decodeResource(getResources(), R.drawable.dog) );
             hm.put("flag", "thumbnail"+i);
+            hm.put("index",""+(i+1));
             aList.add(hm);
             //aList.add(id);
         }
 
         // Keys used in Hashmap
         //String[] from = { "flag","txt"};
-        String[] from = {"flag"};
+        String[] from = {"flag","index"};
 
         // Ids of views in listview_layout
         //int[] to = { R.id.flag,R.id.txt};
-        int[] to = {R.id.image};
+        int[] to = {R.id.image,R.id.index};
 
         // Instantiating an adapter to store each items
         // R.layout.listview_layout defines the layout of each item
@@ -174,12 +179,15 @@ public class Examoverview extends DialogFragment {
             }
         });
 
+        gridView.setBackgroundColor(Color.parseColor("#e6e6e6"));
+
         builder.setView(gridView)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Examoverview.this.getDialog().cancel();
                     }
                 });
+
         /*
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
@@ -198,6 +206,14 @@ public class Examoverview extends DialogFragment {
                 });
         */
         return builder.create();
+    }
+
+    public void closeDialog()
+    {
+        if(getDialog().isShowing())
+        {
+            getDialog().dismiss();
+        }
     }
 
 }

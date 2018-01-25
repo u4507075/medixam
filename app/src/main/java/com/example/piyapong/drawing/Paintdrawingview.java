@@ -50,7 +50,9 @@ public class Paintdrawingview extends View{
     }
     public void addPath(Mypath path)
     {
-        previouspath.add(path);
+        if(previouspath!=null) {
+            previouspath.add(path);
+        }
     }
     public void drawPath(Path path, Paint paint)
     {
@@ -101,10 +103,31 @@ public class Paintdrawingview extends View{
     protected void onDraw(Canvas canvas) {
             //canvas.drawPath(path, paint);
         //if(Variable.CURRENTTOOL==Variable.PEN) {
-            if(Variable.bitmap!=null) {
+
+        if(Variable.bitmap!=null) {
+            if(Variable.CURRENTTOOL==Variable.PAINT)
+            {
+                //canvas.drawBitmap(Variable.bitmap, 0, 0, bitmapPaint);
+                canvas.drawPath(mypath,paint);
+            }
+        }
+        if(previouspath!=null) {
+            Variable.bitmap.eraseColor(Color.TRANSPARENT);
+            for (int i = 0; i < previouspath.size(); i++) {
+                if(((Mypath) previouspath.get(i)).getVisibility()) {
+                    canvas.drawPath(((Mypath) previouspath.get(i)).getPath(), ((Mypath) previouspath.get(i)).getPaint());
+                }
+            }
+        }
+
+
+        /*
+            if(Variable.bitmap!=null && bitmapPaint!=null && mypath!=null && paint!=null) {
                 canvas.drawBitmap(Variable.bitmap, 0, 0, bitmapPaint);
                 canvas.drawPath(mypath,paint);
                 //canvas.drawPath(mypath, paint);
+
+
                 if(previouspath!=null) {
                     for (int i = 0; i < previouspath.size(); i++) {
                         if(((Mypath) previouspath.get(i)).getVisibility()) {
@@ -114,6 +137,8 @@ public class Paintdrawingview extends View{
                 }
 
             }
+
+            */
         //}
     }
     /*

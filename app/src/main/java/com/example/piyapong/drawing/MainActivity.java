@@ -1,25 +1,13 @@
 package com.example.piyapong.drawing;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.bluetooth.BluetoothAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Path;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Environment;
+
+import android.os.Handler;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -29,48 +17,34 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
-import android.text.style.SubscriptSpan;
-import android.text.style.SuperscriptSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Base64;
-import android.util.LruCache;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import disccache.Loadbitmap;
+import socket.ConnectTask;
 import thumbnail.SaveThumbnail;
 
 public class MainActivity extends AppCompatActivity {
@@ -90,10 +64,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private Pageviewer mViewPager;
     public static Loadbitmap thumbnail;
+    Examoverview examoverview = new Examoverview();
+
+    //ConnectTask clientThread;
+    //static int startpage = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //clientThread = new ConnectTask();
+
 
         thumbnail = new Loadbitmap(getApplicationContext());
         thumbnail.clearDiskcache();
@@ -105,46 +86,52 @@ public class MainActivity extends AppCompatActivity {
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
-            // Set up the ViewPager with the sections adapter.
-            mViewPager = (Pageviewer) findViewById(R.id.container);
-            mViewPager.setAdapter(mSectionsPagerAdapter);
-            mViewPager.setOffscreenPageLimit(5);
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (Pageviewer) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(5);
 
-            mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+        mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
-                @Override
-                public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
-                                           int oldBottom) {
-                    // its possible that the layout is not complete in which case
-                    // we will get all zero values for the positions, so ignore the event
-                    if (left == 0 && top == 0 && right == 0 && bottom == 0) {
-                        return;
-                    }
-
-                    // Do what you need to do with the height/width since they are now set
-                    Variable.SCREEN_WIDTH = right;
-                    Variable.SCREEN_HEIGHT = bottom;
-                }
-            });
-
-
-            mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight,
+                                       int oldBottom) {
+                // its possible that the layout is not complete in which case
+                // we will get all zero values for the positions, so ignore the event
+                if (left == 0 && top == 0 && right == 0 && bottom == 0) {
+                    return;
                 }
 
-                @Override
-                public void onPageSelected(int position) {
-                    new SaveThumbnail(mViewPager).execute();
-                }
+                // Do what you need to do with the height/width since they are now set
+                Variable.SCREEN_WIDTH = right;
+                Variable.SCREEN_HEIGHT = bottom;
+            }
+        });
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
 
-                }
-            });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //if(Variable.CURRENTPAGE == position) {
+
+                //}
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+
+
+        });
+
+        capture();
+        //initscreencapture();
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -239,10 +226,9 @@ public class MainActivity extends AppCompatActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
-
+        Pageviewer mViewPager;
         public PlaceholderFragment() {
         }
-
         /**
          * Returns a new instance of this fragment for the given section
          * number.
@@ -276,9 +262,17 @@ public class MainActivity extends AppCompatActivity {
             //add paintview into handdrawingview
             Handdrawingview handdrawingview = (Handdrawingview) rootView.findViewById(R.id.handdrawinglayer);
             handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+            ArrayList choicelist = new ArrayList();
+            choicelist.add((TextView) rootView.findViewById(R.id.choice1));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice2));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice3));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice4));
+            choicelist.add((TextView) rootView.findViewById(R.id.choice5));
+            handdrawingview.setChoices(choicelist);
+
             Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
             paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-            //paintdrawingview.setPath(highlightpath);
+
             handdrawingview.setPaintview(paintdrawingview);
 
             //handdrawingview.invalidate();
@@ -300,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
             SpannableString styledString
                     = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
                     + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
-
+            /*
             // make the text twice as large
             styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
 
@@ -333,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
             // url
             styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
-
+            */
             question.setText(styledString);
 
             String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
@@ -369,6 +363,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void scrolltopage(final View view) {
+        //Variable.MANUALSLIDE = false;
+        int targetpage = (Integer.parseInt(((TextView) view).getText().toString()) - 1);
+        //Variable.CURRENTPAGE = targetpage;
+        mViewPager.setCurrentItem(targetpage);
+        if(examoverview!=null)
+        {
+            examoverview.closeDialog();
+        }
+        //Variable.MANUALSLIDE = true;
+    }
+    /*
+    public static void saveThumbnail()
+    {
+        new SaveThumbnail(mViewPager).execute();
+    }
+    */
+    private void capture()
+    {
+        Timer t = new Timer();
+
+        TimerTask task = new TimerTask() {
+
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        new SaveThumbnail(mViewPager).execute();
+                    }
+                });
+            }
+        };
+
+        t.scheduleAtFixedRate(task, 0, 1000);
+    }
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
@@ -407,8 +438,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
     //View currenttool;
     public void selectTool(View view) {
+        ConnectTask c = new ConnectTask();
+        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
+        String deviceName = myDevice.getName();
+        Object[] ob = {"REGISTER",deviceName};
+        c.sendMessage(ob);
         //currenttool = view;
         ((ImageButton) findViewById(R.id.eraser)).setAlpha(0.2f);
         ((ImageButton) findViewById(R.id.paint_blue)).setAlpha(0.2f);
@@ -469,11 +508,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showOverviewexam(View v) {
 
-
-
-        Examoverview vv = new Examoverview();
-
-        vv.show(getFragmentManager(),"Exam overview");
+        examoverview.show(getFragmentManager(),"Exam overview");
     }
 
     public static void addThumbnailtoCache(String key, Bitmap value)

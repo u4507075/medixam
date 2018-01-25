@@ -3,6 +3,7 @@ package thumbnail;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -132,7 +133,7 @@ public class MyAdapter extends SimpleAdapter{
                             }
                             catch (Exception ex)
                             {
-                                ((ImageView) v).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.noimage), Variable.SCREEN_WIDTH/4, Variable.SCREEN_HEIGHT/4, true));
+                                ((ImageView) v).setImageBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(view.getResources(), R.drawable.blank), Variable.SCREEN_WIDTH/4, Variable.SCREEN_HEIGHT/4, true));
                             }
                         }else if(data instanceof Bitmap) {
                             ((ImageView) v).setImageBitmap((Bitmap)data);
