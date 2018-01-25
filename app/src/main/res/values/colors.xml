@@ -18,4 +18,5 @@
     <color name="colorHighlightBlue">#a8d1ff</color>
     <color name="colorHighlightGreen">#98ff98</color>
     <color name="colorText">#000000</color>
+    <color name="background">#F6F6F6</color>
 </resources>

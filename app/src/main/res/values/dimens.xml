@@ -11,7 +11,8 @@
     <dimen name="textpadding">20sp</dimen>
     <dimen name="smallpadding">5sp</dimen>
     <dimen name="choicesize">30sp</dimen>
-
+    <dimen name="icon_size">25dp</dimen>
+    <dimen name="icon_padding">4dp</dimen>
     <dimen name="image_thumbnail_size">100dp</dimen>
     <dimen name="image_thumbnail_spacing">1dp</dimen>
 

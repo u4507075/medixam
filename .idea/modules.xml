@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Drawing.iml" filepath="$PROJECT_DIR$/Drawing.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons-io-2.5/commons-io-2.5.iml" filepath="$PROJECT_DIR$/commons-io-2.5/commons-io-2.5.iml" />
       <module fileurl="file://$PROJECT_DIR$/commons-io-2.5-javadoc/commons-io-2.5-javadoc.iml" filepath="$PROJECT_DIR$/commons-io-2.5-javadoc/commons-io-2.5-javadoc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/medixam.iml" filepath="$PROJECT_DIR$/medixam.iml" />
     </modules>
   </component>
 </project>

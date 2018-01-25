@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -44,6 +45,7 @@ public class Examoverview extends DialogFragment {
         Dialog dialog = getDialog();
         if (dialog != null) {
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
         }
     }
 
@@ -176,6 +178,8 @@ public class Examoverview extends DialogFragment {
                 // do something here
             }
         });
+
+        gridView.setBackgroundColor(Color.parseColor("#e6e6e6"));
 
         builder.setView(gridView)
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

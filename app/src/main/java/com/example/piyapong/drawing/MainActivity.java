@@ -1,29 +1,13 @@
 package com.example.piyapong.drawing;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.bluetooth.BluetoothAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Path;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
-import android.os.Environment;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -33,50 +17,34 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StrikethroughSpan;
-import android.text.style.StyleSpan;
-import android.text.style.SubscriptSpan;
-import android.text.style.SuperscriptSpan;
-import android.text.style.URLSpan;
-import android.text.style.UnderlineSpan;
 import android.util.Base64;
-import android.util.LruCache;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import disccache.Loadbitmap;
+import socket.ConnectTask;
 import thumbnail.SaveThumbnail;
 
 public class MainActivity extends AppCompatActivity {
@@ -96,13 +64,17 @@ public class MainActivity extends AppCompatActivity {
      */
     private Pageviewer mViewPager;
     public static Loadbitmap thumbnail;
-    Examoverview examoverview = new Examoverview();;
+    Examoverview examoverview = new Examoverview();
 
+    //ConnectTask clientThread;
     //static int startpage = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //clientThread = new ConnectTask();
+
 
         thumbnail = new Loadbitmap(getApplicationContext());
         thumbnail.clearDiskcache();
@@ -471,6 +443,11 @@ public class MainActivity extends AppCompatActivity {
 
     //View currenttool;
     public void selectTool(View view) {
+        ConnectTask c = new ConnectTask();
+        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
+        String deviceName = myDevice.getName();
+        Object[] ob = {"REGISTER",deviceName};
+        c.sendMessage(ob);
         //currenttool = view;
         ((ImageButton) findViewById(R.id.eraser)).setAlpha(0.2f);
         ((ImageButton) findViewById(R.id.paint_blue)).setAlpha(0.2f);

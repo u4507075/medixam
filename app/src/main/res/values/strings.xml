@@ -1,5 +1,8 @@
 <resources>
-    <string name="app_name">Drawingbeta</string>
+    <string name="app_name">Medixam 3.0</string>
     <string name="action_settings">grid view</string>
     <string name="section_format">Page %1$d</string>
+    <string name="ip_address">192.168.1.100</string>
+    <string name="port">6000</string>
+    <string name="time_out">1000</string>
 </resources>
