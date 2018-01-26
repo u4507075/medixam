@@ -6,18 +6,28 @@ import android.graphics.Canvas;
 import android.graphics.Path;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import exam.Exam;
 
 /**
  * Created by Piyapong on 19/02/2017.
  */
 public class Variable {
 
+    //Exam
+    public static String EXAMTITLE;
+    public static String EXAMTIME;
+    public static String STUDENTID;
+    public static String STUDENTNAME;
+    public static HashMap<Integer,Exam.Examination> examinations;
+
     public static int SCREEN_WIDTH;
     public static int SCREEN_HEIGHT;
 
     public static Bitmap bitmap = Bitmap.createBitmap(Resources.getSystem().getDisplayMetrics().widthPixels, Resources.getSystem().getDisplayMetrics().heightPixels, Bitmap.Config.ARGB_8888);
     public static Canvas canvas = new Canvas(bitmap);
-    public static int TOTALPAGE = 20;
+    public static int TOTALPAGE = 5;
     public  static ArrayList[] HANDDRAWINGPATH = new ArrayList[TOTALPAGE];
     public  static ArrayList[] HIGHLIGHTPATH = new ArrayList[TOTALPAGE];
 

@@ -27,23 +27,14 @@ import android.view.ViewGroup;
 
 import android.widget.ImageButton;
 import android.widget.TextView;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import disccache.Loadbitmap;
+import exam.Exam;
 import socket.ConnectTask;
 import thumbnail.SaveThumbnail;
 
@@ -66,14 +57,19 @@ public class MainActivity extends AppCompatActivity {
     public static Loadbitmap thumbnail;
     Examoverview examoverview = new Examoverview();
 
-    //ConnectTask clientThread;
-    //static int startpage = 0;
+    ConnectTask connectask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //clientThread = new ConnectTask();
+        connectask = new ConnectTask();
+        connectask.getMessage();
+
+        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
+        String deviceName = myDevice.getName();
+        Object[] ob = {"REGISTER",deviceName};
+        connectask.sendMessage(ob);
 
 
         thumbnail = new Loadbitmap(getApplicationContext());
@@ -246,6 +242,11 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            if(Variable.examinations != null) {
+                int x = getArguments().getInt(ARG_SECTION_NUMBER);
+                Exam.Examination examination = Variable.examinations.get(getArguments().getInt(ARG_SECTION_NUMBER));
+                String dd = "";
+
             rootView.setTag("EXAM" + getArguments().getInt(ARG_SECTION_NUMBER));
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
@@ -328,7 +329,8 @@ public class MainActivity extends AppCompatActivity {
             // url
             styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
             */
-            question.setText(styledString);
+            //question.setText(styledString);
+            question.setText(examination.)
 
             String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
             choicecontent = choicecontent.replace("%s", summary);
@@ -342,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
                 choice.setText(choicecontent);
             }
 
+            }
 
             return rootView;
         }
@@ -443,11 +446,9 @@ public class MainActivity extends AppCompatActivity {
 
     //View currenttool;
     public void selectTool(View view) {
-        ConnectTask c = new ConnectTask();
-        BluetoothAdapter myDevice = BluetoothAdapter.getDefaultAdapter();
-        String deviceName = myDevice.getName();
-        Object[] ob = {"REGISTER",deviceName};
-        c.sendMessage(ob);
+
+
+
         //currenttool = view;
         ((ImageButton) findViewById(R.id.eraser)).setAlpha(0.2f);
         ((ImageButton) findViewById(R.id.paint_blue)).setAlpha(0.2f);
@@ -507,18 +508,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showOverviewexam(View v) {
-
         examoverview.show(getFragmentManager(),"Exam overview");
     }
 
     public static void addThumbnailtoCache(String key, Bitmap value)
     {
         thumbnail.putString(key, encodeTobase64(value));
-
     }
     public static Bitmap getThumbnailtoCache(String key)
     {
         return decodeBase64(thumbnail.getString(key));
+    }
+    public static void addDatatoCache(String key, String value)
+    {
+        thumbnail.putString(key, value);
+    }
+    public static String getDatafromCache(String key)
+    {
+        return thumbnail.getString(key);
     }
     private static String encodeTobase64(Bitmap image)
     {
