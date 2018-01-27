@@ -33,6 +33,7 @@
                 android:textColor="@color/colorText"
                 android:text="1"/>
             <LinearLayout
+            android:id="@+id/question_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">

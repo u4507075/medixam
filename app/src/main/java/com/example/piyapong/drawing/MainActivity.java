@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import disccache.Loadbitmap;
+import exam.Content;
 import exam.Exam;
 import socket.ConnectTask;
 import thumbnail.SaveThumbnail;
@@ -280,22 +282,25 @@ public class MainActivity extends AppCompatActivity {
             //paintdrawingview.invalidate();
 
             //WebView question = (WebView) rootView.findViewById(R.id.question);
-            TextView question = (TextView) rootView.findViewById(R.id.question);
-            //question.getSettings().setBuiltInZoomControls(true);
+            LinearLayout question_content = (LinearLayout) rootView.findViewById(R.id.question_content);
 
+            Content content = new Content();
+            content.addQuestion(getContext(), question_content, examination);
+            //question.getSettings().setBuiltInZoomControls(true);
+            /*
             String summary = "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
                     + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.";
             String questioncontent = new String(Variable.htmlquestiontemplate);
             questioncontent = questioncontent.replace("%s", summary);
             //question.loadData(questioncontent, "text/html; charset=utf-8", null);
             //question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
-            question.setBackgroundColor(Color.TRANSPARENT);
+            //question.setBackgroundColor(Color.TRANSPARENT);
             //question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             //question.setText(Html.fromHtml(questioncontent));
             SpannableString styledString
                     = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
                     + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
-            /*
+
             // make the text twice as large
             styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
 
@@ -330,10 +335,9 @@ public class MainActivity extends AppCompatActivity {
             styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
             */
             //question.setText(styledString);
-            question.setText(examination.)
 
             String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
-            choicecontent = choicecontent.replace("%s", summary);
+            choicecontent = choicecontent.replace("%s", "summary");
             int[] choices = {R.id.choicecontent1, R.id.choicecontent2, R.id.choicecontent3, R.id.choicecontent4, R.id.choicecontent5};
             for (int i = 0; i < choices.length; i++) {
                 TextView choice = (TextView) rootView.findViewById(choices[i]);
