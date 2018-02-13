@@ -71,7 +71,7 @@ public class ConnectTask{
                                                 try {
                                                     new Exam().parse(object[1].toString());
                                                     HashMap<Integer,Exam.Examination> examinations = Variable.examinations;
-                                                    String x = "";
+
                                                 } catch (ParserConfigurationException e) {
                                                     e.printStackTrace();
                                                 } catch (SAXException e) {

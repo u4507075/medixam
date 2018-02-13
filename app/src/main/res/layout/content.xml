@@ -45,17 +45,6 @@
                     android:textSize="21sp"
                     android:paddingBottom="20px"
                     />
-                <ImageView
-                    android:id="@+id/imagesample"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/image1"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:layout_gravity="center"
-                    android:maxHeight="500dp"
-                    android:paddingBottom="20px"
-                    />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

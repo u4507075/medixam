@@ -332,7 +332,7 @@ public class Handdrawingview extends View{
         {
             float x = event.getX();
             float y = event.getY();
-            selectchoice(x,y);
+            //selectchoice(x,y);
             //new SaveThumbnail(mViewPager).execute();
         }
 

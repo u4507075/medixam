@@ -38,6 +38,7 @@ import disccache.Loadbitmap;
 import exam.Content;
 import exam.Exam;
 import socket.ConnectTask;
+import socket.Message;
 import thumbnail.SaveThumbnail;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     Examoverview examoverview = new Examoverview();
 
     ConnectTask connectask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,14 +83,42 @@ public class MainActivity extends AppCompatActivity {
 
         selectTool(findViewById(Variable.CURRENTTOOLID));
 
+        createExampage();
+
+
+
+
+
+
+
+        //capture();
+
+
+
+        //initscreencapture();
+        /*
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        */
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        //client = new com.google.android.gms.common.api.GoogleApiClient.Builder(this).addApi(com.google.android.gms.appindexing.AppIndex.API).build();
+    }
+
+    private void createExampage(){
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (Pageviewer) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setOffscreenPageLimit(5);
-
+        mViewPager.setOffscreenPageLimit(1);
         mViewPager.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
 
             @Override
@@ -129,20 +159,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         capture();
-        //initscreencapture();
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        //client = new com.google.android.gms.common.api.GoogleApiClient.Builder(this).addApi(com.google.android.gms.appindexing.AppIndex.API).build();
+
     }
 
     /*
@@ -182,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
+
 
     @Override
     protected void onResume() {
@@ -243,110 +261,112 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            //View rootView = inflater.inflate(R.layout.cover, container, false);
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             if(Variable.examinations != null) {
+                rootView = inflater.inflate(R.layout.fragment_main, container, false);
                 int x = getArguments().getInt(ARG_SECTION_NUMBER);
                 Exam.Examination examination = Variable.examinations.get(getArguments().getInt(ARG_SECTION_NUMBER));
                 String dd = "";
 
-            rootView.setTag("EXAM" + getArguments().getInt(ARG_SECTION_NUMBER));
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+                rootView.setTag("EXAM" + getArguments().getInt(ARG_SECTION_NUMBER));
+                TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+                textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
 
-            //ArrayList handdrawingpath = Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
-            //ArrayList highlightpath = Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
-            if (Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] == null) {
-                Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] = new ArrayList();
-            }
-            if (Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] == null) {
-                Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] = new ArrayList();
-            }
+                //ArrayList handdrawingpath = Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
+                //ArrayList highlightpath = Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER)-1];
+                if (Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] == null) {
+                    Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] = new ArrayList();
+                }
+                if (Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] == null) {
+                    Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1] = new ArrayList();
+                }
 
-            //add paintview into handdrawingview
-            Handdrawingview handdrawingview = (Handdrawingview) rootView.findViewById(R.id.handdrawinglayer);
-            handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-            ArrayList choicelist = new ArrayList();
-            choicelist.add((TextView) rootView.findViewById(R.id.choice1));
-            choicelist.add((TextView) rootView.findViewById(R.id.choice2));
-            choicelist.add((TextView) rootView.findViewById(R.id.choice3));
-            choicelist.add((TextView) rootView.findViewById(R.id.choice4));
-            choicelist.add((TextView) rootView.findViewById(R.id.choice5));
-            handdrawingview.setChoices(choicelist);
+                //add paintview into handdrawingview
+                Handdrawingview handdrawingview = (Handdrawingview) rootView.findViewById(R.id.handdrawinglayer);
+                handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                ArrayList choicelist = new ArrayList();
+                choicelist.add((TextView) rootView.findViewById(R.id.choice1));
+                choicelist.add((TextView) rootView.findViewById(R.id.choice2));
+                choicelist.add((TextView) rootView.findViewById(R.id.choice3));
+                choicelist.add((TextView) rootView.findViewById(R.id.choice4));
+                choicelist.add((TextView) rootView.findViewById(R.id.choice5));
+                handdrawingview.setChoices(choicelist);
 
-            Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
-            paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                Paintdrawingview paintdrawingview = (Paintdrawingview) rootView.findViewById(R.id.highlightlayer);
+                paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
 
-            handdrawingview.setPaintview(paintdrawingview);
+                handdrawingview.setPaintview(paintdrawingview);
 
-            //handdrawingview.invalidate();
-            //paintdrawingview.invalidate();
+                //handdrawingview.invalidate();
+                //paintdrawingview.invalidate();
 
-            //WebView question = (WebView) rootView.findViewById(R.id.question);
-            LinearLayout question_content = (LinearLayout) rootView.findViewById(R.id.question_content);
+                //WebView question = (WebView) rootView.findViewById(R.id.question);
+                LinearLayout question_content = (LinearLayout) rootView.findViewById(R.id.question_content);
 
-            Content content = new Content();
-            content.addQuestion(getContext(), question_content, examination);
-            //question.getSettings().setBuiltInZoomControls(true);
-            /*
-            String summary = "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
-                    + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.";
-            String questioncontent = new String(Variable.htmlquestiontemplate);
-            questioncontent = questioncontent.replace("%s", summary);
-            //question.loadData(questioncontent, "text/html; charset=utf-8", null);
-            //question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
-            //question.setBackgroundColor(Color.TRANSPARENT);
-            //question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-            //question.setText(Html.fromHtml(questioncontent));
-            SpannableString styledString
-                    = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
-                    + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
+                Content content = new Content();
+                content.addQuestion(getContext(), question_content, examination);
+                //question.getSettings().setBuiltInZoomControls(true);
+                /*
+                String summary = "You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
+                        + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.";
+                String questioncontent = new String(Variable.htmlquestiontemplate);
+                questioncontent = questioncontent.replace("%s", summary);
+                //question.loadData(questioncontent, "text/html; charset=utf-8", null);
+                //question.loadDataWithBaseURL(null, questioncontent, "text/html", "utf-8", null);
+                //question.setBackgroundColor(Color.TRANSPARENT);
+                //question.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                //question.setText(Html.fromHtml(questioncontent));
+                SpannableString styledString
+                        = new SpannableString("You scored <b>192</b> points. Which of these H<sub>2</sub>O X<sup>4</sup> combinations of clinical features is most suggestive of mixed mitral valve disease with a predominance of mitral regurgitation?"
+                        + "Last night's wind drove the fire South, away from us, so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you praying. The fire is still expanding, just not toward us.");   // index 103 - 112
 
-            // make the text twice as large
-            styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
+                // make the text twice as large
+                styledString.setSpan(new RelativeSizeSpan(2f), 0, 5, 0);
 
-            // make text bold
-            styledString.setSpan(new StyleSpan(Typeface.BOLD), 7, 11, 0);
+                // make text bold
+                styledString.setSpan(new StyleSpan(Typeface.BOLD), 7, 11, 0);
 
-            // underline text
-            styledString.setSpan(new UnderlineSpan(), 13, 23, 0);
+                // underline text
+                styledString.setSpan(new UnderlineSpan(), 13, 23, 0);
 
-            // make text italic
-            styledString.setSpan(new StyleSpan(Typeface.ITALIC), 25, 31, 0);
+                // make text italic
+                styledString.setSpan(new StyleSpan(Typeface.ITALIC), 25, 31, 0);
 
-            styledString.setSpan(new StrikethroughSpan(), 33, 46, 0);
+                styledString.setSpan(new StrikethroughSpan(), 33, 46, 0);
 
-            // change text color
-            styledString.setSpan(new ForegroundColorSpan(Color.GREEN), 48, 55, 0);
+                // change text color
+                styledString.setSpan(new ForegroundColorSpan(Color.GREEN), 48, 55, 0);
 
-            // highlight text
-            styledString.setSpan(new BackgroundColorSpan(Color.CYAN), 57, 68, 0);
+                // highlight text
+                styledString.setSpan(new BackgroundColorSpan(Color.CYAN), 57, 68, 0);
 
-            // superscript
-            styledString.setSpan(new SuperscriptSpan(), 72, 83, 0);
-            // make the superscript text smaller
-            styledString.setSpan(new RelativeSizeSpan(0.5f), 72, 83, 0);
+                // superscript
+                styledString.setSpan(new SuperscriptSpan(), 72, 83, 0);
+                // make the superscript text smaller
+                styledString.setSpan(new RelativeSizeSpan(0.5f), 72, 83, 0);
 
-            // subscript
-            styledString.setSpan(new SubscriptSpan(), 87, 96, 0);
-            // make the subscript text smaller
-            styledString.setSpan(new RelativeSizeSpan(0.5f), 87, 96, 0);
+                // subscript
+                styledString.setSpan(new SubscriptSpan(), 87, 96, 0);
+                // make the subscript text smaller
+                styledString.setSpan(new RelativeSizeSpan(0.5f), 87, 96, 0);
 
-            // url
-            styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
-            */
-            //question.setText(styledString);
+                // url
+                styledString.setSpan(new URLSpan("http://www.google.com"), 98, 101, 0);
+                */
+                //question.setText(styledString);
 
-            String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
-            choicecontent = choicecontent.replace("%s", "summary");
-            int[] choices = {R.id.choicecontent1, R.id.choicecontent2, R.id.choicecontent3, R.id.choicecontent4, R.id.choicecontent5};
-            for (int i = 0; i < choices.length; i++) {
-                TextView choice = (TextView) rootView.findViewById(choices[i]);
-                //choice.loadData(choicecontent, "text/html; charset=utf-8", null);
-                //choice.loadDataWithBaseURL(null, choicecontent, "text/html", "utf-8", null);
-                choice.setBackgroundColor(Color.TRANSPARENT);
-                //choice.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-                choice.setText(choicecontent);
-            }
+                String choicecontent = new String("so we are still out of danger for now. No new expansion of alert areas. Thanks to all of you");
+                choicecontent = choicecontent.replace("%s", "summary");
+                int[] choices = {R.id.choicecontent1, R.id.choicecontent2, R.id.choicecontent3, R.id.choicecontent4, R.id.choicecontent5};
+                for (int i = 0; i < choices.length; i++) {
+                    TextView choice = (TextView) rootView.findViewById(choices[i]);
+                    //choice.loadData(choicecontent, "text/html; charset=utf-8", null);
+                    //choice.loadDataWithBaseURL(null, choicecontent, "text/html", "utf-8", null);
+                    choice.setBackgroundColor(Color.TRANSPARENT);
+                    //choice.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                    choice.setText(choicecontent);
+                }
 
             }
 
@@ -360,10 +380,15 @@ public class MainActivity extends AppCompatActivity {
                 View v = getView();
                 if (v != null) {
                     Handdrawingview handdrawingview = (Handdrawingview) v.findViewById(R.id.handdrawinglayer);
-                    handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                    if(handdrawingview != null){
+                        handdrawingview.setPath(Variable.HANDDRAWINGPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                    }
+
                     Paintdrawingview paintdrawingview = (Paintdrawingview) v.findViewById(R.id.highlightlayer);
-                    paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
-                    handdrawingview.setPaintview(paintdrawingview);
+                    if(handdrawingview != null && paintdrawingview != null){
+                        paintdrawingview.setPath(Variable.HIGHLIGHTPATH[getArguments().getInt(ARG_SECTION_NUMBER) - 1]);
+                        handdrawingview.setPaintview(paintdrawingview);
+                    }
                 }
             }
         }
